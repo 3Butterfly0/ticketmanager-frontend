@@ -27,6 +27,8 @@ const CreateTicket = () => {
   const handleAISuggestion = (suggestion) => {
     setFormData(prev => ({
       ...prev,
+      title: (suggestion.title != null && suggestion.title !== '') ? suggestion.title : prev.title,
+      description: (suggestion.description != null && suggestion.description !== '') ? suggestion.description : prev.description,
       category: suggestion.category || prev.category,
       priority: suggestion.priority || prev.priority,
       summary: suggestion.summary || prev.summary,

@@ -82,12 +82,14 @@ const TicketDetails = () => {
     };
 
     try {
-      // allow AI to polish description
+      // allow AI to polish title, description, category, priority
       const suggestion = await aiApi.getAISuggestion(formData.title, formData.description);
       setFormData(prev => ({
         ...prev,
-        title: capitalize(prev.title),
-        description: suggestion.summary || capitalize(prev.description),
+        title: (suggestion.title != null && suggestion.title !== '') ? suggestion.title : capitalize(prev.title),
+        description: (suggestion.description != null && suggestion.description !== '') ? suggestion.description : capitalize(prev.description),
+        category: suggestion.category || prev.category,
+        priority: suggestion.priority || prev.priority,
       }));
       toast.success('Polished!');
     } catch (err) {
@@ -151,8 +153,8 @@ const TicketDetails = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-500">
-      <div className="flex justify-between items-start">
-        <div className="space-y-4 max-w-2xl">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="space-y-4 lg:col-span-2">
           <Link to="/" className="inline-flex items-center text-[10px] font-bold text-text-muted hover:text-brand-primary transition-colors uppercase tracking-widest gap-2 font-body">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -161,7 +163,7 @@ const TicketDetails = () => {
           </Link>
           <div className="flex items-center gap-4">
             {isEditing ? (
-              <div className="w-full">
+              <div className="w-full mt-2">
                 <input 
                   type="text" 
                   name="title" 
@@ -172,43 +174,45 @@ const TicketDetails = () => {
                 {validationErrors.title && <p className="text-[11px] text-brand-danger mt-1.5 font-bold font-body px-2">{validationErrors.title}</p>}
               </div>
             ) : (
-              <h1 className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight">
+              <h1 className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight mt-1">
                 {ticket.title}
               </h1>
             )}
-            {!isEditing && <StatusBadge status={ticket.status} />}
+            {!isEditing && <div className="mt-1"><StatusBadge status={ticket.status} /></div>}
           </div>
         </div>
 
-        {!isEditing && (
-          <div className="flex justify-end gap-3 flex-wrap">
-            <button 
-              onClick={handleDelete}
-              className="px-6 py-3 bg-brand-danger/10 text-brand-danger rounded-lg font-bold text-sm hover:bg-brand-danger hover:text-white transition-colors font-body"
-            >
-              Delete
-            </button>
-            <button 
-              onClick={() => setIsEditing(true)}
-              className="px-6 py-3 bg-surface-highest text-text-main rounded-lg font-bold text-sm hover:bg-surface-highest/80 transition font-body"
-            >
-              Edit Ticket
-            </button>
-            <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 bg-surface-base text-[10px] font-bold text-text-muted uppercase font-body z-10">Change Status</label>
-              <select 
-                value={ticket.status}
-                onChange={handleStatusChange}
-                disabled={saveLoading}
-                className="bg-surface-card rounded-lg p-3 pt-3 text-sm font-body font-bold text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition disabled:opacity-50 min-w-[140px] appearance-none shadow-sm h-full"
+        <div className="lg:col-span-1 flex flex-col justify-end h-full">
+          {!isEditing && (
+            <div className="flex justify-start xl:justify-end items-end gap-3 flex-wrap pb-2">
+              <button 
+                onClick={handleDelete}
+                className="px-4 py-2 bg-brand-danger/10 text-brand-danger rounded-md font-bold text-xs hover:bg-brand-danger hover:text-white transition-colors font-body"
               >
-                <option value="OPEN">Open</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="CLOSED">Closed</option>
-              </select>
+                Delete
+              </button>
+              <button 
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-surface-highest text-text-main rounded-md font-bold text-xs hover:bg-surface-highest/80 transition font-body"
+              >
+                Edit Ticket
+              </button>
+              <div className="relative flex flex-col mt-1">
+                <label className="text-[9px] font-bold text-text-muted uppercase font-body mb-1 pl-1">Change Status</label>
+                <select 
+                  value={ticket.status}
+                  onChange={handleStatusChange}
+                  disabled={saveLoading}
+                  className="bg-surface-card rounded-md pl-3 pr-8 py-1.5 text-xs font-body font-bold text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition disabled:opacity-50 shadow-sm cursor-pointer border border-surface-highest/20"
+                >
+                  <option value="OPEN">Open</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                  <option value="CLOSED">Closed</option>
+                </select>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

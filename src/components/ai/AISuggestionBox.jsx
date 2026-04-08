@@ -55,7 +55,17 @@ const AISuggestionBox = ({ title, description, onSuggestion }) => {
       )}
 
       {suggestion && (
-        <div className="mt-6 space-y-5 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          {suggestion.title && (
+            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+                Polished Title
+              </span>
+              <span className="font-bold text-text-main font-body text-sm">
+                {suggestion.title}
+              </span>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
               <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
@@ -74,14 +84,16 @@ const AISuggestionBox = ({ title, description, onSuggestion }) => {
               </span>
             </div>
           </div>
-          <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
-            <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
-              Generated Summary
-            </span>
-            <p className="text-sm font-body text-text-main/80 leading-relaxed">
-              {suggestion.summary}
-            </p>
-          </div>
+          {suggestion.summary && (
+            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+                Summary
+              </span>
+              <p className="text-sm font-body text-text-main/80 leading-relaxed">
+                {suggestion.summary}
+              </p>
+            </div>
+          )}
           <button
             onClick={applySuggestion}
             className="w-full py-3 bg-brand-tertiary text-text-inverse rounded-lg font-bold text-sm hover:opacity-90 transition-opacity flex justify-center items-center gap-2"
