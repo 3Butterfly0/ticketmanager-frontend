@@ -14,6 +14,7 @@ const CreateTicket = () => {
     description: '',
     category: 'OTHER',
     priority: 'MEDIUM',
+    status: 'OPEN',
     summary: '',
   });
 
@@ -60,34 +61,34 @@ const CreateTicket = () => {
         <div className="lg:col-span-2">
           <form onSubmit={handleSubmit} className="bg-surface-card p-8 rounded-3xl space-y-6 shadow-sm">
             <div>
-              <label className="block text-sm font-bold text-text-main font-body mb-2">Title</label>
+              <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Issue Title</label>
               <input 
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                placeholder="Brief summary of the issue"
+                placeholder="e.g., Database connection timeout in production"
                 className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-text-main font-body mb-2">Description</label>
+              <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Description</label>
               <textarea 
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Provide as much detail as possible..."
+                placeholder="Provide detailed steps to reproduce the issue..."
                 rows={6}
                 className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted resize-none"
                 required
               ></textarea>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-bold text-text-main font-body mb-2">Category</label>
+                <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Category</label>
                 <select 
                   name="category"
                   value={formData.category}
@@ -104,7 +105,7 @@ const CreateTicket = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-text-main font-body mb-2">Priority</label>
+                <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Priority</label>
                 <select 
                   name="priority"
                   value={formData.priority}
@@ -116,22 +117,35 @@ const CreateTicket = () => {
                   <option value="LOW">Low</option>
                 </select>
               </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Status</label>
+                <select 
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all"
+                >
+                  <option value="OPEN">Open</option>
+                  <option value="IN_PROGRESS">In Progress</option>
+                </select>
+              </div>
             </div>
 
             {error && <ErrorAlert message={error} />}
 
-            <div className="pt-6 flex gap-4">
+            <div className="pt-6 flex justify-end items-center gap-4 border-t border-surface-highest/30">
               <button 
                 type="button"
                 onClick={() => navigate('/')}
-                className="flex-1 py-3.5 bg-surface-highest text-text-main rounded-lg font-medium hover:bg-surface-highest/80 transition font-body"
+                className="px-6 py-2.5 text-sm font-bold text-text-muted hover:text-text-main transition-colors font-body"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-3.5 bg-brand-primary text-text-inverse rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed font-body"
+                className="px-8 py-3 bg-brand-primary text-text-inverse rounded-lg text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed font-body"
               >
                 {loading ? 'Creating...' : 'Submit Ticket'}
               </button>

@@ -1,9 +1,19 @@
 import { fetchJSON } from './client';
 
+const capitalize = (text) => {
+  if (!text) return '';
+  const trimmed = text.trim();
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+};
+
 export const ticketApi = {
   createTicket: (data) => fetchJSON('/tickets', {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      title: capitalize(data.title),
+      description: capitalize(data.description)
+    }),
   }),
 
   getAllTickets: (filters = {}) => {
@@ -20,7 +30,11 @@ export const ticketApi = {
 
   updateTicket: (id, data) => fetchJSON(`/tickets/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      ...data,
+      title: capitalize(data.title),
+      description: capitalize(data.description)
+    }),
   }),
 
   updateStatus: (id, status) => fetchJSON(`/tickets/${id}/status`, {

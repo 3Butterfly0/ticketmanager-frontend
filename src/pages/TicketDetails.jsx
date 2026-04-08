@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ticketApi } from '../api/ticketApi';
 import StatusBadge from '../components/ticket/StatusBadge';
 import PriorityBadge from '../components/ticket/PriorityBadge';
-import AISummaryCard from '../components/ai/AISummaryCard';
+import { aiApi } from '../api/aiApi';
 import Loader from '../components/ui/Loader';
 import ErrorAlert from '../components/ui/ErrorAlert';
 
@@ -23,6 +23,7 @@ const TicketDetails = () => {
     status: '',
     summary: '',
   });
+  const [polishLoading, setPolishLoading] = useState(false);
 
   const fetchTicket = async () => {
     setLoading(true);
@@ -69,6 +70,34 @@ const TicketDetails = () => {
     }
   };
 
+  const handlePolish = async () => {
+    setPolishLoading(true);
+    const capitalize = (text) => {
+      if (!text) return '';
+      const trimmed = text.trim();
+      return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    };
+
+    try {
+      // allow AI to polish description
+      const suggestion = await aiApi.getAISuggestion(formData.title, formData.description);
+      setFormData(prev => ({
+        ...prev,
+        title: capitalize(prev.title),
+        description: suggestion.summary || capitalize(prev.description)
+      }));
+    } catch (err) {
+      // fallback polish
+      setFormData(prev => ({
+        ...prev,
+        title: capitalize(prev.title),
+        description: capitalize(prev.description)
+      }));
+    } finally {
+      setPolishLoading(false);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaveLoading(true);
@@ -98,9 +127,19 @@ const TicketDetails = () => {
             Back to Dashboard
           </Link>
           <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight">
-              {isEditing ? 'Editing Ticket' : ticket.title}
-            </h1>
+            {isEditing ? (
+              <input 
+                type="text" 
+                name="title" 
+                value={formData.title} 
+                onChange={handleChange}
+                className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight bg-surface-low border border-transparent focus:border-brand-primary/30 rounded-lg px-2 outline-none w-full"
+              />
+            ) : (
+              <h1 className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight">
+                {ticket.title}
+              </h1>
+            )}
             {!isEditing && <StatusBadge status={ticket.status} />}
           </div>
         </div>
@@ -132,11 +171,21 @@ const TicketDetails = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <AISummaryCard summary={ticket.summary} />
           
           <div className="bg-surface-card p-8 rounded-3xl space-y-6 shadow-sm">
             <div className="border-b border-surface-highest/50 pb-6">
-              <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest mb-4 font-body">Detailed Description</h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body">Detailed Description</h3>
+                {isEditing && (
+                  <button 
+                    onClick={handlePolish}
+                    disabled={polishLoading}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-brand-tertiary/10 text-brand-tertiary text-xs font-bold rounded-lg hover:bg-brand-tertiary hover:text-text-inverse transition-colors disabled:opacity-50"
+                  >
+                    ✨ {polishLoading ? 'Polishing...' : 'Polish'}
+                  </button>
+                )}
+              </div>
               {isEditing ? (
                 <textarea 
                   name="description"
@@ -153,17 +202,17 @@ const TicketDetails = () => {
             </div>
 
             {isEditing && (
-              <div className="flex gap-4 pt-4">
+              <div className="pt-6 mt-4 flex justify-between sm:justify-end items-center gap-4 border-t border-surface-highest/30">
                 <button 
                   onClick={() => setIsEditing(false)}
-                  className="flex-1 py-3.5 bg-surface-highest text-text-main rounded-lg font-medium hover:bg-surface-highest/80 transition font-body"
+                  className="px-6 py-2.5 bg-surface-base text-sm font-bold text-text-main hover:bg-surface-low rounded-lg transition-colors font-body"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleSave}
                   disabled={saveLoading}
-                  className="flex-1 py-3.5 bg-brand-primary text-text-inverse rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-70 font-body"
+                  className="px-8 py-3 bg-brand-primary text-text-inverse rounded-lg text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-70 font-body"
                 >
                   {saveLoading ? 'Saving...' : 'Save Changes'}
                 </button>
