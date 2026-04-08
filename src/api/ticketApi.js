@@ -41,4 +41,8 @@ export const ticketApi = {
     method: 'PATCH',
     body: JSON.stringify({ status }),
   }),
+
+  deleteTicket: (id) => fetchJSON(`/tickets/${id}`, {
+    method: 'DELETE',
+  }),
 };
