@@ -34,7 +34,7 @@ const AISuggestionBox = ({ title, description, onSuggestion }) => {
   };
 
   return (
-    <div className="bg-brand-tertiary/10 backdrop-blur-xl border-2 border-brand-tertiary rounded-3xl p-8 my-6 relative group transform transition-all duration-300">
+    <div className="bg-brand-tertiary/10 backdrop-blur-xl border-2 border-brand-tertiary rounded-3xl p-8 relative group transform transition-all duration-300">
       <div className="flex justify-between items-center mb-6">
         <label className="text-xs font-display font-bold text-brand-tertiary uppercase tracking-widest">
           AI Suggestion

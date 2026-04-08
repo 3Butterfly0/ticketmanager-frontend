@@ -65,14 +65,14 @@ const CreateTicket = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div>
         <h1 className="text-4xl font-display font-medium text-text-main mb-2 tracking-tight">Create New Ticket</h1>
         <p className="text-text-muted font-body text-sm">Provide details about your issue and our AI assistant will help you.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div className="lg:col-span-3">
           <form onSubmit={handleSubmit} className="bg-surface-card p-8 rounded-3xl space-y-6 shadow-sm">
             <div>
               <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Issue Title</label>
@@ -169,7 +169,7 @@ const CreateTicket = () => {
           </form>
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-2">
           <AISuggestionBox 
             title={formData.title} 
             description={formData.description} 
