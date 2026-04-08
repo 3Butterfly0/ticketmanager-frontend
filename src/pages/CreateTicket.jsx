@@ -65,15 +65,15 @@ const CreateTicket = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="max-w-5xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div>
-        <h1 className="text-4xl font-display font-medium text-text-main mb-2 tracking-tight">Create New Ticket</h1>
-        <p className="text-text-muted font-body text-sm">Provide details about your issue and our AI assistant will help you.</p>
+        <h1 className="text-3xl md:text-4xl font-display font-medium text-text-main mb-2 tracking-tight">Create New Ticket</h1>
+        <p className="text-text-muted font-body text-xs md:text-sm">Provide details about your issue and our AI assistant will help you.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-        <div className="lg:col-span-3">
-          <form onSubmit={handleSubmit} className="bg-surface-card p-8 rounded-3xl space-y-6 shadow-sm">
+      <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 md:gap-8 items-start">
+        <div className="order-2 lg:order-1 lg:col-span-3 w-full">
+          <form onSubmit={handleSubmit} className="bg-surface-card p-6 md:p-8 rounded-3xl space-y-6 shadow-sm">
             <div>
               <label className="block text-[10px] font-bold text-text-muted uppercase tracking-widest font-body mb-2">Issue Title</label>
               <input 
@@ -150,18 +150,18 @@ const CreateTicket = () => {
 
             {error && <ErrorAlert message={error} />}
 
-            <div className="pt-6 flex justify-end items-center gap-4 border-t border-surface-highest/30">
+            <div className="pt-6 flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-4 border-t border-surface-highest/30">
               <button 
                 type="button"
                 onClick={() => navigate('/')}
-                className="px-6 py-2.5 text-sm font-bold text-text-muted hover:text-text-main transition-colors font-body"
+                className="px-6 py-2.5 text-sm font-bold text-text-muted hover:text-text-main transition-colors font-body sm:order-1 pt-2 sm:pt-0"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
                 disabled={loading}
-                className="px-8 py-3 bg-brand-primary text-text-inverse rounded-lg text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed font-body"
+                className="px-8 py-3 bg-brand-primary text-text-inverse rounded-lg text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed font-body sm:order-2"
               >
                 {loading ? 'Creating...' : 'Submit Ticket'}
               </button>
@@ -169,7 +169,7 @@ const CreateTicket = () => {
           </form>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="order-1 lg:order-2 lg:col-span-2 w-full">
           <AISuggestionBox 
             title={formData.title} 
             description={formData.description} 

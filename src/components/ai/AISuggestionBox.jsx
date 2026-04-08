@@ -34,69 +34,69 @@ const AISuggestionBox = ({ title, description, onSuggestion }) => {
   };
 
   return (
-    <div className="bg-brand-tertiary/10 backdrop-blur-xl border-2 border-brand-tertiary rounded-3xl p-8 relative group transform transition-all duration-300">
-      <div className="flex justify-between items-center mb-6">
-        <label className="text-xs font-display font-bold text-brand-tertiary uppercase tracking-widest">
+    <div className="bg-brand-tertiary/10 backdrop-blur-xl border-2 border-brand-tertiary rounded-3xl p-5 md:p-8 relative group transform transition-all duration-300">
+      <div className="flex justify-between items-center mb-4 md:mb-6">
+        <label className="text-[10px] md:text-xs font-display font-bold text-brand-tertiary uppercase tracking-widest">
           AI Suggestion
         </label>
         <button
           onClick={handleSuggest}
           disabled={loading || !title || !description}
-          className="text-xs font-bold px-4 py-2 rounded-lg bg-surface-card border border-brand-tertiary/30 text-brand-tertiary hover:bg-brand-tertiary hover:text-text-inverse disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+          className="text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-surface-card border border-brand-tertiary/30 text-brand-tertiary hover:bg-brand-tertiary hover:text-text-inverse disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
         >
           {loading ? "Analyzing..." : "✨ Auto-fill"}
         </button>
       </div>
 
       {error && (
-        <p className="text-xs text-brand-danger mt-2 bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20 font-body">
+        <p className="text-[11px] md:text-xs text-brand-danger mt-2 bg-brand-danger/10 p-3 rounded-lg border border-brand-danger/20 font-body">
           {error}
         </p>
       )}
 
       {suggestion && (
-        <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mt-4 md:mt-6 space-y-3 md:space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
           {suggestion.title && (
-            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
-              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+            <div className="p-3 md:p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[9px] md:text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
                 Polished Title
               </span>
-              <span className="font-bold text-text-main font-body text-sm">
+              <span className="font-bold text-text-main font-body text-xs md:text-sm">
                 {suggestion.title}
               </span>
             </div>
           )}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
-              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            <div className="p-3 md:p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[9px] md:text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
                 Category
               </span>
-              <span className="font-bold text-text-main font-body">
+              <span className="font-bold text-text-main font-body text-xs md:text-sm">
                 {suggestion.category}
               </span>
             </div>
-            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
-              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+            <div className="p-3 md:p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[9px] md:text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
                 Priority
               </span>
-              <span className="font-bold text-text-main font-body">
+              <span className="font-bold text-text-main font-body text-xs md:text-sm">
                 {suggestion.priority}
               </span>
             </div>
           </div>
           {suggestion.summary && (
-            <div className="p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
-              <span className="block text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
+            <div className="p-3 md:p-4 bg-surface-card rounded-xl border border-brand-tertiary/20 shadow-sm">
+              <span className="block text-[9px] md:text-[10px] text-text-muted font-bold uppercase mb-1 font-body">
                 Summary
               </span>
-              <p className="text-sm font-body text-text-main/80 leading-relaxed">
+              <p className="text-xs md:text-sm font-body text-text-main/80 leading-relaxed">
                 {suggestion.summary}
               </p>
             </div>
           )}
           <button
             onClick={applySuggestion}
-            className="w-full py-3 bg-brand-tertiary text-text-inverse rounded-lg font-bold text-sm hover:opacity-90 transition-opacity flex justify-center items-center gap-2"
+            className="w-full py-2.5 md:py-3 bg-brand-tertiary text-text-inverse rounded-lg font-bold text-xs md:text-sm hover:opacity-90 transition-opacity flex justify-center items-center gap-2 mt-2"
           >
             Apply Suggestion
           </button>
@@ -104,7 +104,7 @@ const AISuggestionBox = ({ title, description, onSuggestion }) => {
       )}
 
       {!suggestion && !loading && !error && (
-        <p className="text-sm text-text-muted opacity-60 italic">
+        <p className="text-xs md:text-sm text-text-muted opacity-60 italic">
           Fill in the title and description to get intelligent suggestions for
           category and priority.
         </p>

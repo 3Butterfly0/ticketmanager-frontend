@@ -6,9 +6,7 @@ const Pagination = ({
   itemsPerPage,
   onPageChange,
 }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  if (totalPages <= 1) return null;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);

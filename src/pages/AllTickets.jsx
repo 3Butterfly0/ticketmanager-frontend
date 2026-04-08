@@ -80,15 +80,15 @@ const AllTickets = () => {
   const paginatedTickets = sortedTickets.slice(startIdx, startIdx + ITEMS_PER_PAGE);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
-      <div className="flex justify-between items-end mb-6">
+    <div className="flex flex-col flex-1 h-full w-full animate-in fade-in duration-500 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-display font-medium text-text-main mb-1 tracking-tight">Ticket Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-display font-medium text-text-main mb-1 tracking-tight">Ticket Dashboard</h1>
           <p className="text-text-muted font-body text-xs">Manage and track your support requests</p>
         </div>
         <Link 
           to="/create"
-          className="px-5 py-2.5 bg-brand-primary text-text-inverse rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm"
+          className="hidden sm:flex justify-center px-5 py-2.5 bg-brand-primary text-text-inverse rounded-lg text-sm font-medium hover:opacity-90 transition-opacity items-center gap-2 shadow-sm"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -97,13 +97,13 @@ const AllTickets = () => {
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 bg-surface-low/50 p-2 rounded-xl backdrop-blur-sm border border-surface-highest/20">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-6 bg-surface-low/50 p-3 sm:p-4 rounded-xl backdrop-blur-sm border border-surface-highest/20">
+        <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-3 w-full lg:w-auto">
           <select 
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="bg-surface-card rounded-lg px-3 py-2 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
+            className="w-full sm:w-auto bg-surface-card rounded-lg px-3 py-2.5 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
           >
             <option value="">Status: All</option>
             <option value="OPEN">Open</option>
@@ -115,7 +115,7 @@ const AllTickets = () => {
             name="priority"
             value={filters.priority}
             onChange={handleFilterChange}
-            className="bg-surface-card rounded-lg px-3 py-2 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
+            className="w-full sm:w-auto bg-surface-card rounded-lg px-3 py-2.5 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
           >
             <option value="">Priority: All</option>
             <option value="HIGH">High</option>
@@ -127,7 +127,7 @@ const AllTickets = () => {
             name="category"
             value={filters.category}
             onChange={handleFilterChange}
-            className="bg-surface-card rounded-lg px-3 py-2 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
+            className="w-full sm:w-auto bg-surface-card rounded-lg px-3 py-2.5 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
           >
             <option value="">Category: All</option>
             <option value="BILLING">Billing</option>
@@ -141,19 +141,19 @@ const AllTickets = () => {
           {(filters.status || filters.priority || filters.category || sortBy !== 'NEWEST') && (
             <button 
               onClick={clearFilters}
-              className="px-3 py-2 text-[10px] font-bold text-text-muted hover:text-brand-primary transition-colors uppercase tracking-widest bg-surface-highest/20 hover:bg-brand-primary/10 rounded-lg ml-2"
+              className="w-full sm:w-auto px-3 py-2.5 text-[10px] font-bold text-text-muted hover:text-brand-primary transition-colors uppercase tracking-widest bg-surface-highest/20 hover:bg-brand-primary/10 rounded-lg sm:ml-2"
             >
               Clear
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-2 self-end md:self-auto">
-          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body">Sort By</label>
+        <div className="flex items-center gap-2 justify-between lg:justify-end pt-2 lg:pt-0 border-t lg:border-t-0 border-surface-highest/20">
+          <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest font-body whitespace-nowrap">Sort By</label>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-surface-card rounded-lg px-3 py-2 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
+            className="flex-1 lg:flex-none bg-surface-card rounded-lg px-3 py-2 text-xs font-bold font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all shadow-sm border border-surface-highest/30 cursor-pointer"
           >
             <option value="NEWEST">Newest First</option>
             <option value="OLDEST">Oldest First</option>
@@ -173,20 +173,22 @@ const AllTickets = () => {
       ) : sortedTickets.length === 0 ? (
         <EmptyState message="No tickets matching your filters." />
       ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex flex-col flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
             {paginatedTickets.map(ticket => (
               <TicketCard key={ticket.id} ticket={ticket} />
             ))}
           </div>
           
-          <Pagination 
-            currentPage={currentPage} 
-            totalItems={totalItems} 
-            itemsPerPage={ITEMS_PER_PAGE} 
-            onPageChange={setCurrentPage} 
-          />
-        </>
+          <div className="mt-auto">
+            <Pagination 
+              currentPage={currentPage} 
+              totalItems={totalItems} 
+              itemsPerPage={ITEMS_PER_PAGE} 
+              onPageChange={setCurrentPage} 
+            />
+          </div>
+        </div>
       )}
     </div>
   );
