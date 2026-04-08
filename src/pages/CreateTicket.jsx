@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ticketApi } from '../api/ticketApi';
 import AISuggestionBox from '../components/ai/AISuggestionBox';
-import Loader from '../components/ui/Loader';
 import ErrorAlert from '../components/ui/ErrorAlert';
 import { toast } from 'react-hot-toast';
 
@@ -10,6 +9,7 @@ const CreateTicket = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -35,10 +35,20 @@ const CreateTicket = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.title.trim().length === 0 || formData.description.trim().length === 0) {
-      setError("Title and description are required.");
+    const errors = {};
+    const titleLen = formData.title.trim().length;
+    const descLen = formData.description.trim().length;
+
+    if (titleLen < 5) errors.title = "Title must be at least 5 characters.";
+    if (titleLen > 100) errors.title = "Title cannot exceed 100 characters.";
+    if (descLen < 10) errors.description = "Description must be at least 10 characters.";
+    if (descLen > 1000) errors.description = "Description cannot exceed 1000 characters.";
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
       return;
     }
+    setValidationErrors({});
 
     setLoading(true);
     setError(null);
@@ -70,9 +80,10 @@ const CreateTicket = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="e.g., Database connection timeout in production"
-                className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted"
+                className={`w-full rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted ${validationErrors.title ? 'bg-brand-danger/5 border border-brand-danger/30' : 'bg-surface-low border border-transparent'}`}
                 required
               />
+              {validationErrors.title && <p className="text-[11px] text-brand-danger mt-2 font-bold font-body">{validationErrors.title}</p>}
             </div>
             
             <div>
@@ -83,9 +94,10 @@ const CreateTicket = () => {
                 onChange={handleChange}
                 placeholder="Provide detailed steps to reproduce the issue..."
                 rows={6}
-                className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted resize-none"
+                className={`w-full rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-text-muted resize-none ${validationErrors.description ? 'bg-brand-danger/5 border border-brand-danger/30' : 'bg-surface-low border border-transparent'}`}
                 required
               ></textarea>
+              {validationErrors.description && <p className="text-[11px] text-brand-danger mt-2 font-bold font-body">{validationErrors.description}</p>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -14,6 +14,7 @@ const TicketDetails = () => {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -86,9 +87,9 @@ const TicketDetails = () => {
       setFormData(prev => ({
         ...prev,
         title: capitalize(prev.title),
-        description: suggestion.summary || capitalize(prev.description)
+        description: suggestion.summary || capitalize(prev.description),
       }));
-      toast.success('Polished');
+      toast.success('Polished!');
     } catch (err) {
       // fallback polish
       setFormData(prev => ({
@@ -96,14 +97,41 @@ const TicketDetails = () => {
         title: capitalize(prev.title),
         description: capitalize(prev.description)
       }));
-      toast.error('Polish failed, basic cleanup applied');
+      toast.error('AI polish failed, basic text cleanup applied.');
     } finally {
       setPolishLoading(false);
     }
   };
 
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this ticket?')) {
+      try {
+        await ticketApi.deleteTicket(id);
+        toast.success('Ticket deleted');
+        navigate('/');
+      } catch (err) {
+        toast.error('Failed to delete ticket');
+      }
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
+    const errors = {};
+    const titleLen = formData.title.trim().length;
+    const descLen = formData.description.trim().length;
+
+    if (titleLen < 5) errors.title = "Title must be at least 5 characters.";
+    if (titleLen > 100) errors.title = "Title cannot exceed 100 characters.";
+    if (descLen < 10) errors.description = "Description must be at least 10 characters.";
+    if (descLen > 1000) errors.description = "Description cannot exceed 1000 characters.";
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    setValidationErrors({});
+
     setSaveLoading(true);
     try {
       const updated = await ticketApi.updateTicket(id, formData);
@@ -133,13 +161,16 @@ const TicketDetails = () => {
           </Link>
           <div className="flex items-center gap-4">
             {isEditing ? (
-              <input 
-                type="text" 
-                name="title" 
-                value={formData.title} 
-                onChange={handleChange}
-                className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight bg-surface-low border border-transparent focus:border-brand-primary/30 rounded-lg px-2 outline-none w-full"
-              />
+              <div className="w-full">
+                <input 
+                  type="text" 
+                  name="title" 
+                  value={formData.title} 
+                  onChange={handleChange}
+                  className={`text-4xl font-display font-medium text-text-main leading-tight tracking-tight rounded-lg px-2 outline-none w-full transition-all ${validationErrors.title ? 'bg-brand-danger/5 border border-brand-danger/30 focus:border-brand-danger/60' : 'bg-surface-low border border-transparent focus:border-brand-primary/30'}`}
+                />
+                {validationErrors.title && <p className="text-[11px] text-brand-danger mt-1.5 font-bold font-body px-2">{validationErrors.title}</p>}
+              </div>
             ) : (
               <h1 className="text-4xl font-display font-medium text-text-main leading-tight tracking-tight">
                 {ticket.title}
@@ -152,8 +183,14 @@ const TicketDetails = () => {
         {!isEditing && (
           <div className="flex justify-end gap-3 flex-wrap">
             <button 
+              onClick={handleDelete}
+              className="px-6 py-3 bg-brand-danger/10 text-brand-danger rounded-lg font-bold text-sm hover:bg-brand-danger hover:text-white transition-colors font-body"
+            >
+              Delete
+            </button>
+            <button 
               onClick={() => setIsEditing(true)}
-              className="px-6 py-3 bg-surface-highest text-text-main rounded-lg font-medium hover:bg-surface-highest/80 transition font-body"
+              className="px-6 py-3 bg-surface-highest text-text-main rounded-lg font-bold text-sm hover:bg-surface-highest/80 transition font-body"
             >
               Edit Ticket
             </button>
@@ -192,13 +229,16 @@ const TicketDetails = () => {
                 )}
               </div>
               {isEditing ? (
-                <textarea 
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={8}
-                  className="w-full bg-surface-low rounded-lg p-4 text-sm font-body text-text-main focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all resize-none"
-                ></textarea>
+                <div>
+                  <textarea 
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    rows={8}
+                    className={`w-full rounded-lg p-4 text-sm font-body text-text-main outline-none transition-all resize-none ${validationErrors.description ? 'bg-brand-danger/5 border border-brand-danger/30 focus:ring-2 focus:ring-brand-danger/20' : 'bg-surface-low border border-transparent focus:ring-2 focus:ring-brand-primary/20'}`}
+                  ></textarea>
+                  {validationErrors.description && <p className="text-[11px] text-brand-danger mt-2 font-bold font-body">{validationErrors.description}</p>}
+                </div>
               ) : (
                 <p className="text-text-main/80 font-body leading-relaxed whitespace-pre-wrap text-sm">
                   {ticket.description}
@@ -209,7 +249,18 @@ const TicketDetails = () => {
             {isEditing && (
               <div className="pt-6 mt-4 flex justify-between sm:justify-end items-center gap-4 border-t border-surface-highest/30">
                 <button 
-                  onClick={() => setIsEditing(false)}
+                  onClick={() => {
+                    setIsEditing(false);
+                    setValidationErrors({});
+                    setFormData({
+                      title: ticket.title,
+                      description: ticket.description,
+                      category: ticket.category,
+                      priority: ticket.priority,
+                      status: ticket.status,
+                      summary: ticket.summary || ''
+                    });
+                  }}
                   className="px-6 py-2.5 bg-surface-base text-sm font-bold text-text-main hover:bg-surface-low rounded-lg transition-colors font-body"
                 >
                   Cancel
