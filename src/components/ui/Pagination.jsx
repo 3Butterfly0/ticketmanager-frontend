@@ -39,9 +39,7 @@ const Pagination = ({
 
       <div className="flex items-center gap-1">
         <button
-          onClick={() =>
-            currentPage < totalPages && onPageChange(currentPage + 1)
-          }
+          onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="p-2 text-text-muted hover:text-text-main disabled:opacity-30 disabled:hover:text-text-muted transition-colors"
         >

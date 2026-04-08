@@ -6,6 +6,7 @@ import PriorityBadge from '../components/ticket/PriorityBadge';
 import { aiApi } from '../api/aiApi';
 import Loader from '../components/ui/Loader';
 import ErrorAlert from '../components/ui/ErrorAlert';
+import { toast } from 'react-hot-toast';
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -63,8 +64,9 @@ const TicketDetails = () => {
       const updated = await ticketApi.updateStatus(id, newStatus);
       setTicket(updated);
       setFormData(prev => ({ ...prev, status: newStatus }));
+      toast.success('Status updated');
     } catch (err) {
-      alert("Failed to update status.");
+      toast.error("Failed to update status.");
     } finally {
       setSaveLoading(false);
     }
@@ -86,6 +88,7 @@ const TicketDetails = () => {
         title: capitalize(prev.title),
         description: suggestion.summary || capitalize(prev.description)
       }));
+      toast.success('Polished');
     } catch (err) {
       // fallback polish
       setFormData(prev => ({
@@ -93,6 +96,7 @@ const TicketDetails = () => {
         title: capitalize(prev.title),
         description: capitalize(prev.description)
       }));
+      toast.error('Polish failed, basic cleanup applied');
     } finally {
       setPolishLoading(false);
     }
@@ -105,8 +109,9 @@ const TicketDetails = () => {
       const updated = await ticketApi.updateTicket(id, formData);
       setTicket(updated);
       setIsEditing(false);
+      toast.success('Ticket updated');
     } catch (err) {
-      alert("Failed to save changes.");
+      toast.error("Failed to save changes.");
     } finally {
       setSaveLoading(false);
     }

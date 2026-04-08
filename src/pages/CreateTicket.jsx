@@ -4,6 +4,7 @@ import { ticketApi } from '../api/ticketApi';
 import AISuggestionBox from '../components/ai/AISuggestionBox';
 import Loader from '../components/ui/Loader';
 import ErrorAlert from '../components/ui/ErrorAlert';
+import { toast } from 'react-hot-toast';
 
 const CreateTicket = () => {
   const navigate = useNavigate();
@@ -43,9 +44,10 @@ const CreateTicket = () => {
     setError(null);
     try {
       await ticketApi.createTicket(formData);
+      toast.success('Ticket created successfully');
       navigate('/');
     } catch (err) {
-      setError("Failed to create ticket. Please try again.");
+      toast.error('Failed to create ticket. Please try again.');
       setLoading(false);
     }
   };
